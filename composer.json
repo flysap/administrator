@@ -1,4 +1,12 @@
 {
+    "name": "parfumix/smg",
+    "description": "SMG",
+    "authors": [
+      {
+        "name": "Radu",
+        "email": "radu.bordei89@gmail.com"
+      }
+    ],
     "require": {
         "laravel/framework": "~5.1"
     },

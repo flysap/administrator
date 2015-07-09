@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 class FlysapServiceProvider extends ServiceProvider {
 
     public function boot() {
-        
+
         /** Register routes . */
         if (! $this->app->routesAreCached()) {
             require __DIR__.'/../routes.php';

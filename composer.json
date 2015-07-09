@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-          "Flysap\\Administrator": "src/"
+          "Flysap\\Administrator\\": "src/"
         }
     },
     "minimum-stability": "dev"

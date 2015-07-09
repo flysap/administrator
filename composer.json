@@ -7,6 +7,7 @@
         "email": "radu.bordei89@gmail.com"
       }
     ],
+    "license": "MIT",
     "require": {
         "laravel/framework": "~5.1",
         "php": ">=5.5.0"

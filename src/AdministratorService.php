@@ -6,4 +6,5 @@ use Flysap\Administrator\Contracts\AdministratorServiceContract;
 
 class AdministratorService implements AdministratorServiceContract {
 
+
 }

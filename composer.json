@@ -1,6 +1,7 @@
 {
     "name": "flysap/administrator",
     "description": "SMG",
+    "description": "SMG",
     "authors": [
       {
         "name": "Radu",
@@ -8,6 +9,12 @@
       }
     ],
     "license": "MIT",
+    "repositories": [
+      {
+        "type": "git",
+        "url" : "git@github.com:flysap/module-manager.git"
+      }
+    ],
     "require": {
         "laravel/framework": "~5.1",
         "flysap/module-manager": "dev-master",

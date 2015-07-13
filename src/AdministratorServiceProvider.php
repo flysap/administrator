@@ -4,6 +4,7 @@ namespace Flysap\Administrator;
 
 use Flysap\Administrator\Contracts\AdministratorServiceContract;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\Yaml\Yaml;
 
 class AdministratorServiceProvider extends ServiceProvider {
 
@@ -11,6 +12,12 @@ class AdministratorServiceProvider extends ServiceProvider {
         $this->loadRoutes()
             ->loadConfiguration()
             ->loadViews();
+
+        /** On bootstrap set framework active . */
+        app(AdministratorServiceContract::class)
+            ->setFramework(
+                config('administrator::active_framework')
+            );
     }
 
     /**

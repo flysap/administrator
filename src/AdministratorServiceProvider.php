@@ -64,6 +64,10 @@ class AdministratorServiceProvider extends ServiceProvider {
     protected function loadViews() {
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'administrator');
 
+        $this->publishes([
+            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/administrator'),
+        ]);
+
         return $this;
     }
 }

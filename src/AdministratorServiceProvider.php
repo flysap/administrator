@@ -28,8 +28,10 @@ class AdministratorServiceProvider extends ServiceProvider {
     public function register() {
 
         /** Register administrator service .. */
-        $this->app->singleton(AdministratorServiceContract::class, function() {
-            return new AdministratorService();
+        $this->app->singleton(AdministratorServiceContract::class, function($app) {
+            return new AdministratorService(
+                $app['module-caching']
+            );
         });
     }
 

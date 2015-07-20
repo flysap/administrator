@@ -3,6 +3,7 @@
 namespace Flysap\Administrator;
 
 use Flysap\Administrator\Contracts\AdministratorServiceContract;
+use Flysap\Permissions\Permissions;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Yaml\Yaml;
 
@@ -18,6 +19,7 @@ class AdministratorServiceProvider extends ServiceProvider {
             ->setFramework(
                 config('administrator::active_framework')
             );
+
     }
 
     /**
@@ -30,7 +32,14 @@ class AdministratorServiceProvider extends ServiceProvider {
         /** Register administrator service .. */
         $this->app->singleton(AdministratorServiceContract::class, function($app) {
             return new AdministratorService(
-                $app['module-caching']
+                $app['module-caching'], $app[Permissions::class]
+            );
+        });
+
+        /** Register administrator menu .. */
+        $this->app->singleton('menu-manager', function($app) {
+            return new MenuManager(
+                $app['module-caching'], $app[Permissions::class]
             );
         });
     }

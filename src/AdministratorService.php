@@ -4,6 +4,7 @@ namespace Flysap\Administrator;
 
 use Flysap\Administrator\Contracts\AdministratorServiceContract;
 use Flysap\ModuleManger\ModulesCaching;
+use Flysap\Permissions\Permissions;
 
 class AdministratorService implements AdministratorServiceContract {
 
@@ -12,9 +13,15 @@ class AdministratorService implements AdministratorServiceContract {
      */
     private $modulesCaching;
 
-    public function __construct(ModulesCaching $modulesCaching) {
+    /**
+     * @var Permissions
+     */
+    private $permissions;
+
+    public function __construct(ModulesCaching $modulesCaching, Permissions $permissions) {
 
         $this->modulesCaching = $modulesCaching;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -34,25 +41,5 @@ class AdministratorService implements AdministratorServiceContract {
      */
     public function getFramework() {
         // TODO: Implement getFramework() method.
-    }
-
-    /**
-     * Get modules menu .
-     *
-     * @param array $modules
-     * @return array|mixed
-     */
-    public function buildModulesSections(array $modules = array()) {
-        $modules = $this->modulesCaching
-            ->toArray($modules);
-
-        $menus = [];
-        array_walk($modules, function($module) use(&$menus) {
-            if( isset($module['menu']) ) {
-                $menus[] = $module['menu'];
-            }
-        });
-
-        return $menus;
     }
 }

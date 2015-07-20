@@ -55,7 +55,7 @@ class AdministratorServiceProvider extends ServiceProvider {
      */
     protected function loadConfiguration() {
         $array = Yaml::parse(file_get_contents(
-            __DIR__ . '/../resources/configuration/general.yaml'
+            __DIR__ . '/../configuration/general.yaml'
         ));
 
         $config = $this->app['config']->get('administrator', []);
@@ -71,10 +71,10 @@ class AdministratorServiceProvider extends ServiceProvider {
      * @return $this
      */
     protected function loadViews() {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'administrator');
+        $this->loadViewsFrom(__DIR__ . '/../views', 'administrator');
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/administrator'),
+            __DIR__ . '/../views' => base_path('resources/views/vendor/administrator'),
         ]);
 
         return $this;

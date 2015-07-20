@@ -42,16 +42,14 @@ class AdministratorService implements AdministratorServiceContract {
      * @param array $modules
      * @return array|mixed
      */
-    public function getMenu(array $modules = array()) {
+    public function buildModulesSections(array $modules = array()) {
         $modules = $this->modulesCaching
             ->toArray($modules);
 
         $menus = [];
         array_walk($modules, function($module) use(&$menus) {
             if( isset($module['menu']) ) {
-                $menus = array_merge(
-                    $menus, $module['menu']
-                );
+                $menus[] = $module['menu'];
             }
         });
 

@@ -18,6 +18,7 @@
     "require": {
         "laravel/framework": "~5.1",
         "flysap/module-manager": "dev-master",
+        "flysap/permissions": "dev-master",
         "symfony/yaml": "~2.7",
         "php": ">=5.5.0"
     },

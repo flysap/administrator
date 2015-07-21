@@ -13,12 +13,16 @@
       {
         "type": "git",
         "url" : "git@github.com:flysap/module-manager.git"
+      },
+      {
+        "type": "git",
+        "url" : "git@github.com:flysap/users.git"
       }
     ],
     "require": {
         "laravel/framework": "~5.1",
         "flysap/module-manager": "dev-master",
-        "flysap/permissions": "dev-master",
+        "flysap/users": "dev-master",
         "symfony/yaml": "~2.7",
         "php": ">=5.5.0"
     },

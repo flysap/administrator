@@ -2,66 +2,125 @@
 
 namespace Flysap\Administrator;
 
-use Flysap\ModuleManger\ModulesCaching;
-use Flysap\Permissions\Permissions;
+use Flysap\ModuleManager\ModulesCaching;
+use Flysap\Support\Traits\ElementAttributes;
+use Flysap\Support\Traits\ElementsGroup;
+use Flysap\Support\Traits\ElementsTrait;
 
 class MenuManager {
 
+    use ElementsTrait, ElementAttributes, ElementsGroup;
 
     /**
      * @var ModulesCaching
      */
     private $modulesCaching;
 
-    /**
-     * @var Permissions
-     */
-    private $permissions;
-
-    public function __construct(ModulesCaching $modulesCaching, Permissions $permissions) {
+    public function __construct(ModulesCaching $modulesCaching) {
 
         $this->modulesCaching = $modulesCaching;
-        $this->permissions = $permissions;
+
+        $modules = $this->modulesCaching
+            ->toArray();
+
+        $this->setModules($modules);
     }
 
     /**
      * Get modules menu .
      *
-     * @param array $modules
+     * @param string $group
+     * @param array $attributes
      * @return array|mixed
      */
-    public function buildModulesSections(array $modules = array()) {
-        $modules = $this->modulesCaching
-            ->toArray($modules);
+    public function render($group = null, array $attributes = array()) {
+        if(! $attributes)
+            $this->setAttributes($attributes);
 
-        $menus = [];
-        array_walk($modules, function($module) use(& $menus) {
-            if( isset($module['menu']) ) {
-                if(! isset($module['menu']['section']))
-                    return false;
+        $groups = $this->getGroups();
 
-                /** Check if is active . */
-                if(! isset($module['menu']['active']) && ! $module['menu']['active'])
-                    return false;
+        if(! is_null($group) )
+            $groups = $this->getGroup($group);
+
+        array_walk($groups, function($group) use(& $result) {
+
+            $result  = '<ul';
+            $result .= $this->renderAttributes();
+            $result .= '>';
+
+            $menus = $group->getElements();
+
+            array_walk($menus, function($menu) use(& $result) {
 
                 /** Check for permissions . */
-                if( isset( $module['menu']['permissions'] ) )
-                    if( ! $this->permissions->canAccess(
-                        $module['menu']['permissions']
-                    ) )
+                if( isset( $menu['permissions'] ) )
+                    if( ! \Flysap\Users\can($menu['permissions']) )
                         return false;
 
                 /** Check for roles . */
-                if( isset( $module['menu']['roles'] ) )
-                    if( ! $this->permissions->is(
-                        $module['menu']['roles']
-                    ) )
+                if( isset( $module['roles'] ) )
+                    if( ! \Flysap\Users\is($menu['roles']) )
                         return false;
 
-                $menus[$module['menu']['section']] = array_except($module['menu'], ['section']);
-            }
+                $result .= '<li>'.$menu['label'].'</li>';
+            });
+
+            $result .= '</ul>';
+
         });
 
-        return $menus;
+        return $result;
+    }
+
+    public function __toString() {
+        return $this->render();
+    }
+
+    /**
+     * Prepare menu .
+     *
+     * @param array $modules
+     * @return $this
+     */
+    public function setModules(array $modules) {
+        $menus = [];
+
+        array_walk($modules, function($module) use(&$menus) {
+            if( isset($module['menu']) )
+                array_walk($module['menu'], function($menu)  {
+                    $this->addGroup(
+                        $menu['section'], [$menu['label'] => $menu]
+                    );
+
+                    $this->elements[$menu['section']. '_' . $menu['label']] = $menu;
+                });
+        });
+
+       return $this;
+    }
+
+    /**
+     * Get modules .
+     *
+     * @param array $keys
+     * @return array
+     */
+    public function getModules($keys = array()) {
+        return $this->getElements($keys);
+    }
+
+    /**
+     * Render attributes .
+     *
+     * @return string
+     */
+    protected function renderAttributes() {
+        $result = '';
+
+        foreach ($this->getAttributes() as $attribute => $value) {
+            $result .= " {$attribute}=\"{$value}\"";
+        }
+
+        return $result;
     }
 }

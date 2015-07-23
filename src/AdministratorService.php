@@ -3,8 +3,7 @@
 namespace Flysap\Administrator;
 
 use Flysap\Administrator\Contracts\AdministratorServiceContract;
-use Flysap\ModuleManger\ModulesCaching;
-use Flysap\Permissions\Permissions;
+use Flysap\ModuleManager\ModulesCaching;
 
 class AdministratorService implements AdministratorServiceContract {
 
@@ -13,15 +12,10 @@ class AdministratorService implements AdministratorServiceContract {
      */
     private $modulesCaching;
 
-    /**
-     * @var Permissions
-     */
-    private $permissions;
 
-    public function __construct(ModulesCaching $modulesCaching, Permissions $permissions) {
+    public function __construct(ModulesCaching $modulesCaching) {
 
         $this->modulesCaching = $modulesCaching;
-        $this->permissions = $permissions;
     }
 
     /**

@@ -29,7 +29,8 @@
     "autoload": {
         "psr-4": {
           "Flysap\\Administrator\\": "src/"
-        }
+        },
+        "files": ["helpers.php"]
     },
     "minimum-stability": "dev"
 }

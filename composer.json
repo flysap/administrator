@@ -23,6 +23,7 @@
         "laravel/framework": "~5.1",
         "flysap/module-manager": "dev-master",
         "flysap/users": "dev-master",
+        "flysap/support": "dev-master",
         "symfony/yaml": "~2.7",
         "php": ">=5.5.0"
     },

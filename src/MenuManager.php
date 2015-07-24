@@ -7,6 +7,11 @@ use Flysap\Support\Traits\ElementAttributes;
 use Flysap\Support\Traits\ElementsGroup;
 use Flysap\Support\Traits\ElementsTrait;
 
+/**
+ * Class MenuManager
+ * @package Flysap\Administrator
+ *
+ */
 class MenuManager {
 
     use ElementsTrait, ElementAttributes, ElementsGroup;
@@ -34,13 +39,13 @@ class MenuManager {
      * @return array|mixed
      */
     public function render($group = null, array $attributes = array()) {
-        if(! $attributes)
+        if( $attributes )
             $this->setAttributes($attributes);
 
         $groups = $this->getGroups();
 
         if(! is_null($group) )
-            $groups = $this->getGroup($group);
+            $groups = [$this->getGroup($group)];
 
         array_walk($groups, function($group) use(& $result) {
 
@@ -49,7 +54,6 @@ class MenuManager {
             $result .= '>';
 
             $menus = $group->getElements();
-
             array_walk($menus, function($menu) use(& $result) {
 
                 /** Check for permissions . */
@@ -62,7 +66,7 @@ class MenuManager {
                     if( ! \Flysap\Users\is($menu['roles']) )
                         return false;
 
-                $result .= '<li>'.$menu['label'].'</li>';
+                $result .= '<li><a href="#">'.$menu['label'].'</a></li>';
             });
 
             $result .= '</ul>';

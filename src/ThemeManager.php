@@ -9,7 +9,7 @@ use Flysap\Support;
 
 class ThemeManager {
 
-    const DEFAULT_THEME_FILE = '/bootstrap/default_theme.json';
+    const DEFAULT_THEME_FILE = 'default_theme.json';
 
     /**
      * @var ModuleThemeManager
@@ -29,16 +29,31 @@ class ThemeManager {
      * @throws AdministratorException
      */
     public function setDefaultTheme(ServiceProvider $serviceProvider) {
-        if( ! $defaultTheme = $this->getDefaultCached() )
+        if( ! $defaultTheme = json_decode($this->getDefaultCached()) )
             $defaultTheme = config('administrator.default_theme');
 
         $this->setTheme(
             $defaultTheme, $serviceProvider
         );
 
+        $cachePath =  app_path('../' . $this->themeManager->getCachePath());
+
+        Support\dump_file($cachePath . DIRECTORY_SEPARATOR . self::DEFAULT_THEME_FILE, json_encode(
+            $defaultTheme
+        ));
+
         return $this;
     }
 
+    /**
+     * Set theme .
+     *
+     * @param $theme
+     * @param ServiceProvider $serviceProvider
+     * @return $this
+     * @throws AdministratorException
+     * @throws \Flysap\ThemeManager\Exceptions\ThemeUploaderException
+     */
     public function setTheme($theme, ServiceProvider $serviceProvider) {
         $fullPath =  app_path('../' . $this->themeManager->getStoragePath() . DIRECTORY_SEPARATOR . $theme);
 
@@ -71,7 +86,7 @@ class ThemeManager {
      */
     public function getDefaultCached() {
         $fullCachePath = app_path(
-            '../' . self::DEFAULT_THEME_FILE
+            '../' . $this->themeManager->getCachePath() . DIRECTORY_SEPARATOR . self::DEFAULT_THEME_FILE
         );
 
         $theme = null;

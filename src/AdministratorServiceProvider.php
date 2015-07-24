@@ -13,12 +13,11 @@ class AdministratorServiceProvider extends ServiceProvider {
             ->loadConfiguration()
             ->loadViews();
 
-        /** On bootstrap set framework active . */
-        app(AdministratorServiceContract::class)
-            ->setFramework(
-                config('administrator::active_framework')
+        /** On bootstrap set active theme . */
+        app('admin-theme-manager')
+            ->setDefaultTheme(
+                $this
             );
-
     }
 
     /**
@@ -30,8 +29,13 @@ class AdministratorServiceProvider extends ServiceProvider {
 
         /** Register administrator service .. */
         $this->app->singleton(AdministratorServiceContract::class, function($app) {
-            return new AdministratorService(
-                $app['module-caching']
+            return new AdministratorService;
+        });
+
+        /** Register administrator theme manager .. */
+        $this->app->singleton('admin-theme-manager', function($app) {
+            return new ThemeManager(
+                $app['theme-manager']
             );
         });
 
@@ -87,4 +91,15 @@ class AdministratorServiceProvider extends ServiceProvider {
 
         return $this;
     }
+
+    /**
+     * Call protected parent function .
+     *
+     * @param string $path
+     * @param string $namespace
+     */
+    public function loadViewsFrom($path, $namespace) {
+        return parent::loadViewsFrom($path, $namespace);
+    }
+
 }

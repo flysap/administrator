@@ -28,6 +28,14 @@ class MenuManager {
         $modules = $this->modulesCaching
             ->toArray();
 
+        $menuPaths = config('administrator.module_menu_namespace');
+
+        array_walk($menuPaths, function($path) use(& $modules) {
+            $modules = array_merge($modules, $this->modulesCaching->findModulesConfig(
+                app_path('../' . $path)
+            ));
+        });
+
         $this->setModules($modules);
     }
 

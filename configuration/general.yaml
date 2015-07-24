@@ -1,2 +1,7 @@
 # here will be set up active theme .
 default_theme: flysap/admin-lte
+
+# additional menu module folder .
+module_menu_namespace:
+ - vendor/flysap/module-manager
+ - vendor/flysap/theme-manager

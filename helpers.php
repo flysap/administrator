@@ -2,6 +2,13 @@
 
 namespace Flysal\Administrator;
 
+
+/**
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Menu helpers                                                       *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+
 /**
  * Get menu sections .
  *
@@ -36,3 +43,32 @@ function render_menu_section($section, $attributes = array()) {
 function render_menu($manager) {
     return $manager->render();
 }
+
+
+/**
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * User helpers                                                       *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+
+/**
+ * Get current user .
+ *
+ * @return mixed
+ */
+function current_user() {
+    return \Auth::user();
+}
+
+/**
+ * Get current Username .
+ *
+ */
+function current_username() {
+    $user = current_user();
+
+    if( isset($user->id) )
+        return $user->name;
+}
+
+

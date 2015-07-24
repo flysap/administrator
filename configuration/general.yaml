@@ -1,2 +1,2 @@
-# here will be set up active framework .
-active_framework: bootstrap
+# here will be set up active theme .
+default_theme: flysap/admin-lte

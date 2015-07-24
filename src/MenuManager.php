@@ -66,7 +66,9 @@ class MenuManager {
                     if( ! \Flysap\Users\is($menu['roles']) )
                         return false;
 
-                $result .= '<li><a href="#">'.$menu['label'].'</a></li>';
+                $url = (isset($menu['route'])) ? route($menu['route']) : ( isset($menu['href']) ? $menu['href'] : '#' );
+
+                $result .= '<li><a href="'. $url .'">'.$menu['label'].'</a></li>';
             });
 
             $result .= '</ul>';

@@ -36,12 +36,6 @@ class ThemeManager {
             $defaultTheme, $serviceProvider
         );
 
-        $cachePath =  app_path('../' . $this->themeManager->getCachePath());
-
-        Support\dump_file($cachePath . DIRECTORY_SEPARATOR . self::DEFAULT_THEME_FILE, json_encode(
-            $defaultTheme
-        ));
-
         return $this;
     }
 
@@ -70,6 +64,12 @@ class ThemeManager {
             throw new AdministratorException(
                 _('Invalid theme')
             );
+
+        $cachePath =  app_path('../' . $this->themeManager->getCachePath());
+
+        Support\dump_file($cachePath . DIRECTORY_SEPARATOR . self::DEFAULT_THEME_FILE, json_encode(
+            $theme
+        ));
 
         $serviceProvider->loadViewsFrom(
             app_path('../themes/' . $theme),

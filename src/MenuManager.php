@@ -25,10 +25,10 @@ class MenuManager {
 
         $this->modulesCaching = $modulesCaching;
 
-        $modules = $this->modulesCaching
-            ->toArray();
+        $menuPaths = config('administrator.module_namespaces');
 
-        $menuPaths = config('administrator.module_menu_namespace');
+        $modules= $this->modulesCaching
+            ->toArray();
 
         array_walk($menuPaths, function($path) use(& $modules) {
             $modules = array_merge($modules, $this->modulesCaching->findModulesConfig(
@@ -74,9 +74,14 @@ class MenuManager {
                     if( ! \Flysap\Users\is($menu['roles']) )
                         return false;
 
+                /** @var Get the variable from view shared . $label */
+                $label = $this->detectVariables(
+                    $menu['label']
+                );
+
                 $url = (isset($menu['route'])) ? route($menu['route']) : ( isset($menu['href']) ? $menu['href'] : '#' );
 
-                $result .= '<li><a href="'. $url .'">'.$menu['label'].'</a></li>';
+                $result .= '<li><a href="'. $url .'">'.$label.'</a></li>';
             });
 
             $result .= '</ul>';
@@ -136,5 +141,22 @@ class MenuManager {
         }
 
         return $result;
+    }
+
+    /**
+     * Detect variables from label menu .
+     *
+     * @param $label
+     * @return mixed
+     */
+    private function detectVariables($label) {
+        $expression = "/(:(\\w+))/i";
+        $view       = app('view');
+
+        if( preg_match($expression, $label, $matches) )
+            if( $replacement = $view->shared($matches[2]) )
+                $label = preg_replace($expression, $replacement, $label);
+
+        return $label;
     }
 }

@@ -5,3 +5,4 @@ default_theme: flysap/admin-lte
 module_namespaces:
  - vendor/flysap/module-manager
  - vendor/flysap/theme-manager
+ - vendor/flysap/scaffold-generator

@@ -21,22 +21,26 @@ class MenuManager {
      */
     private $modulesCaching;
 
+    /**
+     * @var array
+     */
+    protected $paths = [];
+
     public function __construct(ModulesCaching $modulesCaching) {
 
         $this->modulesCaching = $modulesCaching;
 
         $menuPaths = config('administrator.module_namespaces');
 
+        $this->addNamespace($menuPaths);
+
         $modules= $this->modulesCaching
             ->toArray();
 
-        array_walk($menuPaths, function($path) use(& $modules) {
-            $modules = array_merge($modules, $this->modulesCaching->findModulesConfig(
-                app_path('../' . $path)
-            ));
-        });
-
-        $this->setModules($modules);
+        $this->setModules(array_merge(
+            $modules,
+            $this->getMenuNamespaces()
+        ));
     }
 
     /**
@@ -95,6 +99,63 @@ class MenuManager {
         return $this->render();
     }
 
+
+    /**
+     * Add new namespace .
+     *
+     * @param $path
+     * @return $this
+     */
+    public function addNamespace($path) {
+        if(! is_array($path))
+            $path = (array)$path;
+
+        array_walk($path, function($path) {
+            $this->paths[] = $path;
+        });
+
+        return $this;
+    }
+
+    /**
+     * Get all namespaces .
+     *
+     * @return array
+     */
+    public function getNamespaces() {
+        return $this->paths;
+    }
+
+    /**
+     * Flush namespaces .
+     *
+     * @return $this
+     */
+    public function flushNamespaces() {
+        $this->paths = [];
+
+        return $this;
+    }
+
+    /**
+     * Get menu paths.
+     *
+     * @return array
+     */
+    public function getMenuNamespaces() {
+        $menuPaths = $this->getNamespaces();
+        $modules   = [];
+
+        array_walk($menuPaths, function($path) use(& $modules) {
+            $modules = array_merge($modules, $this->modulesCaching->findModulesConfig(
+                app_path('../' . $path)
+            ));
+        });
+
+        return $modules;
+    }
+
+
     /**
      * Prepare menu .
      *
@@ -127,6 +188,7 @@ class MenuManager {
     public function getModules($keys = array()) {
         return $this->getElements($keys);
     }
+
 
     /**
      * Render attributes .

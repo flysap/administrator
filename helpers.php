@@ -17,7 +17,9 @@ namespace Flysal\Administrator;
 function get_menu_sections() {
     $manager = app('menu-manager');
 
-    return $manager->getGroups();
+    return $manager
+        ->buildMenu()
+        ->getGroups();
 }
 
 /**

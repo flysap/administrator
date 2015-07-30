@@ -26,21 +26,38 @@ class MenuManager {
      */
     protected $paths = [];
 
+    /**
+     * @var bool
+     */
+    protected $isBuild = false;
+
     public function __construct(ModulesCaching $modulesCaching) {
 
         $this->modulesCaching = $modulesCaching;
+    }
 
-        $menuPaths = config('administrator.module_namespaces');
+    /**
+     * Prepare namespaces .
+     *
+     */
+    public function buildMenu() {
+        if(! $this->isBuild) {
+            $menuPaths = config('administrator.module_namespaces');
 
-        $this->addNamespace($menuPaths);
+            $this->addNamespace($menuPaths);
 
-        $modules= $this->modulesCaching
-            ->toArray();
+            $modules= $this->modulesCaching
+                ->toArray();
 
-        $this->setModules(array_merge(
-            $modules,
-            $this->getMenuNamespaces()
-        ));
+            $this->setModules(array_merge(
+                $modules,
+                $this->getConfigModules()
+            ));
+
+            $this->isBuild = true;
+        }
+
+        return $this;
     }
 
     /**
@@ -51,6 +68,8 @@ class MenuManager {
      * @return array|mixed
      */
     public function render($group = null, array $attributes = array()) {
+        $this->buildMenu();
+
         if( $attributes )
             $this->setAttributes($attributes);
 
@@ -111,6 +130,11 @@ class MenuManager {
             $path = (array)$path;
 
         array_walk($path, function($path) {
+            if( ! \Flysap\Support\is_path_exists(
+                app_path('../' . $path)
+            ))
+                return false;
+
             $this->paths[] = $path;
         });
 
@@ -142,7 +166,7 @@ class MenuManager {
      *
      * @return array
      */
-    public function getMenuNamespaces() {
+    public function getConfigModules() {
         $menuPaths = $this->getNamespaces();
         $modules   = [];
 

@@ -7,65 +7,30 @@ use Flysap\Support\Traits\ElementAttributes;
 use Flysap\Support\Traits\ElementsGroup;
 use Flysap\Support\Traits\ElementsTrait;
 
-/**
- * Class MenuManager
- * @package Flysap\Administrator
- *
- */
 class MenuManager {
 
     use ElementsTrait, ElementAttributes, ElementsGroup;
 
-    /**
-     * @var ModulesCaching
-     */
     private $modulesCaching;
 
-    /**
-     * @var array
-     */
-    protected $paths = [];
+    protected $modules = [];
 
-    /**
-     * @var bool
-     */
+    protected $namespaces = [];
+
     protected $isBuild = false;
 
+    /**
+     * @param ModulesCaching $modulesCaching
+     */
     public function __construct(ModulesCaching $modulesCaching) {
 
         $this->modulesCaching = $modulesCaching;
     }
 
     /**
-     * Prepare namespaces .
-     *
-     */
-    public function buildMenu() {
-        if(! $this->isBuild) {
-            $menuPaths = config('administrator.module_namespaces');
-
-            $this->addNamespace($menuPaths);
-
-            $modules= $this->modulesCaching
-                ->toArray();
-
-            $this->setModules(array_merge(
-                $modules,
-                $this->getConfigModules()
-            ));
-
-            $this->isBuild = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get modules menu .
-     *
-     * @param string $group
+     * @param null $group
      * @param array $attributes
-     * @return array|mixed
+     * @return mixed
      */
     public function render($group = null, array $attributes = array()) {
         $this->buildMenu();
@@ -118,55 +83,85 @@ class MenuManager {
         return $this->render();
     }
 
+    /**
+     * Prepare namespaces .
+     *
+     */
+    public function buildMenu() {
+        if(! $this->isBuild) {
+            $defaultPaths = config('administrator.module_namespaces');
+
+            $this->addNamespace($defaultPaths);
+
+            $this->addModules(
+                $this->modulesCaching
+                    ->toArray()
+            );
+
+            $this->setMenu(array_merge(
+                $this->getModules(),
+                $this->findModules()
+            ));
+
+            $this->isBuild = true;
+        }
+
+        return $this;
+    }
 
     /**
-     * Add new namespace .
+     * Add module .
      *
-     * @param $path
+     * @param $module
      * @return $this
      */
-    public function addNamespace($path) {
-        if(! is_array($path))
-            $path = (array)$path;
+    public function addModule($module) {
+        $this->modules[] = $module;
 
-        array_walk($path, function($path) {
-            if( ! \Flysap\Support\is_path_exists(
-                app_path('../' . $path)
-            ))
-                return false;
+        return $this;
+    }
 
-            $this->paths[] = $path;
+    /**
+     * @param $modules
+     * @return $this
+     */
+    public function addModules($modules) {
+        if(! is_array($modules))
+            $modules = (array)$modules;
+
+        array_walk($modules, function($module) {
+            $this->modules[] = $module;
         });
 
         return $this;
     }
 
     /**
-     * Get all namespaces .
+     * Get modules
      *
      * @return array
      */
-    public function getNamespaces() {
-        return $this->paths;
+    public function getModules() {
+        return $this->modules;
     }
 
     /**
-     * Flush namespaces .
+     * Flush modules .
      *
      * @return $this
      */
-    public function flushNamespaces() {
-        $this->paths = [];
+    public function flushModules() {
+        $this->modules = [];
 
         return $this;
     }
 
     /**
-     * Get menu paths.
+     * Find modules .
      *
      * @return array
      */
-    public function getConfigModules() {
+    public function findModules() {
         $menuPaths = $this->getNamespaces();
         $modules   = [];
 
@@ -179,17 +174,56 @@ class MenuManager {
         return $modules;
     }
 
+    /**
+     * Add module namespace .
+     *
+     * @param $namespace
+     * @return $this
+     */
+    public function addNamespace($namespace) {
+        if(! is_array($namespace))
+            $namespace = (array)$namespace;
+
+        array_walk($namespace, function($namespace) {
+            if( ! \Flysap\Support\is_path_exists(
+                app_path('../' . $namespace)
+            ))
+                return false;
+
+            $this->namespaces[] = $namespace;
+        });
+
+        return $this;
+    }
 
     /**
-     * Prepare menu .
+     * Get modules namespaces .
+     *
+     * @return array
+     */
+    public function getNamespaces() {
+        return $this->namespaces;
+    }
+
+    /**
+     * Flush all namespaces .
+     *
+     * @return $this
+     */
+    public function flushNamespaces() {
+        $this->namespaces = [];
+
+        return $this;
+    }
+
+    /**
+     * Set menu .
      *
      * @param array $modules
      * @return $this
      */
-    public function setModules(array $modules) {
-        $menus = [];
-
-        array_walk($modules, function($module) use(&$menus) {
+    public function setMenu(array $modules) {
+        array_walk($modules, function($module) {
             if( isset($module['menu']) )
                 array_walk($module['menu'], function($menu)  {
                     $this->addGroup(
@@ -200,37 +234,21 @@ class MenuManager {
                 });
         });
 
-       return $this;
+        return $this;
     }
 
     /**
-     * Get modules .
+     * Get menu
      *
      * @param array $keys
      * @return array
      */
-    public function getModules($keys = array()) {
+    public function getMenu($keys = array()) {
         return $this->getElements($keys);
     }
 
-
     /**
-     * Render attributes .
-     *
-     * @return string
-     */
-    protected function renderAttributes() {
-        $result = '';
-
-        foreach ($this->getAttributes() as $attribute => $value) {
-            $result .= " {$attribute}=\"{$value}\"";
-        }
-
-        return $result;
-    }
-
-    /**
-     * Detect variables from label menu .
+     * Detect dynamic variables .
      *
      * @param $label
      * @return mixed

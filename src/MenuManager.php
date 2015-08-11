@@ -27,6 +27,7 @@ class MenuManager {
         $this->modulesCaching = $modulesCaching;
     }
 
+
     /**
      * @param null $group
      * @param array $attributes
@@ -63,9 +64,7 @@ class MenuManager {
                         return false;
 
                 /** @var Get the variable from view shared . $label */
-                $label = $this->detectVariables(
-                    $menu['label']
-                );
+                $label = $this->detectVariables($menu['label']);
 
                 $url = (isset($menu['route'])) ? route($menu['route']) : ( isset($menu['href']) ? $menu['href'] : '#' );
 
@@ -82,6 +81,7 @@ class MenuManager {
     public function __toString() {
         return $this->render();
     }
+
 
     /**
      * Prepare namespaces .
@@ -108,6 +108,7 @@ class MenuManager {
 
         return $this;
     }
+
 
     /**
      * Add module .
@@ -174,6 +175,7 @@ class MenuManager {
         return $modules;
     }
 
+
     /**
      * Add module namespace .
      *
@@ -216,6 +218,7 @@ class MenuManager {
         return $this;
     }
 
+
     /**
      * Set menu .
      *
@@ -247,6 +250,7 @@ class MenuManager {
         return $this->getElements($keys);
     }
 
+
     /**
      * Detect dynamic variables .
      *
@@ -254,12 +258,11 @@ class MenuManager {
      * @return mixed
      */
     private function detectVariables($label) {
-        $expression = "/(:(\\w+))/i";
-        $view       = app('view');
+        $expression  = "/(:(\\w+))/i";
+        $view        = app('view');
 
         if( preg_match($expression, $label, $matches) )
-            if( $replacement = $view->shared($matches[2]) )
-                $label = preg_replace($expression, $replacement, $label);
+            $label = preg_replace($expression, $view->shared($matches[2], ''), $label);
 
         return $label;
     }

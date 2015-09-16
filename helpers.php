@@ -1,6 +1,6 @@
 <?php
 
-namespace Flysal\Administrator;
+namespace Flysap\Administrator;
 
 
 /**

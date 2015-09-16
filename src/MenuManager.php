@@ -6,6 +6,8 @@ use Flysap\ModuleManager\ModulesCaching;
 use Flysap\Support\Traits\ElementAttributes;
 use Flysap\Support\Traits\ElementsGroup;
 use Flysap\Support\Traits\ElementsTrait;
+use Flysap\Users;
+use Flysap\Support;
 
 class MenuManager {
 
@@ -44,10 +46,12 @@ class MenuManager {
         if(! is_null($group) )
             $groups = [$this->getGroup($group)];
 
+
         array_walk($groups, function($group) use(& $result) {
 
+            #@todo ..
             $result  = '<ul';
-            $result .= $this->renderAttributes();
+            $result .= $this->renderAttributes(['class']);
             $result .= '>';
 
             $menus = $group->getElements();
@@ -55,12 +59,12 @@ class MenuManager {
 
                 /** Check for permissions . */
                 if( isset( $menu['permissions'] ) )
-                    if( ! \Flysap\Users\can($menu['permissions']) )
+                    if( ! Users\can($menu['permissions']) )
                         return false;
 
                 /** Check for roles . */
                 if( isset( $module['roles'] ) )
-                    if( ! \Flysap\Users\is($menu['roles']) )
+                    if( ! Users\is($menu['roles']) )
                         return false;
 
                 /** @var Get the variable from view shared . $label */
@@ -187,7 +191,7 @@ class MenuManager {
             $namespace = (array)$namespace;
 
         array_walk($namespace, function($namespace) {
-            if( ! \Flysap\Support\is_path_exists(
+            if( ! Support\is_path_exists(
                 app_path('../' . $namespace)
             ))
                 return false;

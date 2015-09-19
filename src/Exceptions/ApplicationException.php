@@ -1,5 +1,5 @@
 <?php
 
-namespace Flysap\Administrator\Exceptions;
+namespace Flysap\Application\Exceptions;
 
-class AdministratorException extends \Exception {}
+class ApplicationException extends \Exception {}

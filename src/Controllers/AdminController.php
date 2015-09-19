@@ -1,6 +1,6 @@
 <?php
 
-namespace Flysap\Administrator\Controllers;
+namespace Flysap\Application\Controllers;
 
 use App\Http\Controllers\Controller;
 

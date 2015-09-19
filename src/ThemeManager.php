@@ -1,8 +1,8 @@
 <?php
 
-namespace Flysap\Administrator;
+namespace Flysap\Application;
 
-use Flysap\Administrator\Exceptions\AdministratorException;
+use Flysap\Application\Exceptions\ApplicationException;
 use Flysap\ThemeManager\ThemeManager as ModuleThemeManager;
 use Illuminate\Support\ServiceProvider;
 use Flysap\Support;
@@ -26,7 +26,7 @@ class ThemeManager {
      *
      * @param ServiceProvider $serviceProvider
      * @return $this
-     * @throws AdministratorException
+     * @throws ApplicationException
      */
     public function setDefaultTheme(ServiceProvider $serviceProvider) {
         if( ! $defaultTheme = json_decode($this->getDefaultCached()) )
@@ -45,7 +45,7 @@ class ThemeManager {
      * @param $theme
      * @param ServiceProvider $serviceProvider
      * @return $this
-     * @throws AdministratorException
+     * @throws ApplicationException
      * @throws \Flysap\ThemeManager\Exceptions\ThemeUploaderException
      */
     public function setTheme($theme, ServiceProvider $serviceProvider) {
@@ -54,14 +54,14 @@ class ThemeManager {
         if( ! \Flysap\Support\is_path_exists(
             $fullPath
         ) )
-            throw new AdministratorException(
+            throw new ApplicationException(
                 _('Invalid theme')
             );
 
         if( ! \Flysap\Support\is_folder_empty(
             $fullPath
         ))
-            throw new AdministratorException(
+            throw new ApplicationException(
                 _('Invalid theme')
             );
 

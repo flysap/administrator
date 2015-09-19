@@ -17,6 +17,10 @@
       {
         "type": "git",
         "url" : "git@github.com:flysap/users.git"
+      },
+      {
+        "type": "git",
+        "url" : "git@github.com:flysap/support.git"
       }
     ],
     "require": {

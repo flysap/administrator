@@ -1,12 +1,11 @@
 <?php
 
-namespace Flysap\Administrator;
+namespace Flysap\Application;
 
-use Flysap\Administrator\Contracts\AdministratorServiceContract;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\Yaml\Yaml;
+use Flysap\Support;
 
-class AdministratorServiceProvider extends ServiceProvider {
+class ApplicationServiceProvider extends ServiceProvider {
 
     public function boot() {
         $this->loadRoutes()
@@ -61,13 +60,9 @@ class AdministratorServiceProvider extends ServiceProvider {
      * @return $this
      */
     protected function loadConfiguration() {
-        $array = Yaml::parse(file_get_contents(
-            __DIR__ . '/../configuration/general.yaml'
-        ));
-
-        $config = $this->app['config']->get('administrator', []);
-
-        $this->app['config']->set('administrator', array_merge($array, $config));
+        Support\set_config_from_yaml(
+            __DIR__ . '/../configuration/general.yaml' , 'administrator'
+        );
 
         return $this;
     }

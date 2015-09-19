@@ -27,11 +27,6 @@ class AdministratorServiceProvider extends ServiceProvider {
      */
     public function register() {
 
-        /** Register administrator service .. */
-        $this->app->singleton(AdministratorServiceContract::class, function($app) {
-            return new AdministratorService;
-        });
-
         /** Register administrator theme manager .. */
         $this->app->singleton('admin-theme-manager', function($app) {
             return new ThemeManager(

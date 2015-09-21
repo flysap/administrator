@@ -2,6 +2,8 @@
 
 namespace Flysap\Application;
 
+use Flysap\ModuleManager\ModuleServiceProvider;
+use Flysap\ThemeManager\ThemeServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Flysap\Support;
 
@@ -25,6 +27,11 @@ class ApplicationServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
+        $dependencies = [ModuleServiceProvider::class, ThemeServiceProvider::class];
+
+        array_walk($dependencies, function($dependency) {
+            app()->register($dependency);
+        });
 
         /** Register administrator theme manager .. */
         $this->app->singleton('admin-theme-manager', function($app) {
@@ -39,6 +46,8 @@ class ApplicationServiceProvider extends ServiceProvider {
                 $app['module-caching']
             );
         });
+
+
     }
 
     /**

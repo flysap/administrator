@@ -27,11 +27,7 @@ class ApplicationServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        $dependencies = [ModuleServiceProvider::class, ThemeServiceProvider::class];
-
-        array_walk($dependencies, function($dependency) {
-            app()->register($dependency);
-        });
+        $this->registerDependencies();
 
         /** Register administrator theme manager .. */
         $this->app->singleton('admin-theme-manager', function($app) {
@@ -43,11 +39,9 @@ class ApplicationServiceProvider extends ServiceProvider {
         /** Register administrator menu .. */
         $this->app->singleton('menu-manager', function($app) {
             return new MenuManager(
-                $app['module-caching']
+                $app['module-cache-manager']
             );
         });
-
-
     }
 
     /**
@@ -99,6 +93,18 @@ class ApplicationServiceProvider extends ServiceProvider {
      */
     public function loadViewsFrom($path, $namespace) {
         return parent::loadViewsFrom($path, $namespace);
+    }
+
+    /**
+     * Register service provider dependencies .
+     *
+     */
+    protected function registerDependencies() {
+        $dependencies = [ModuleServiceProvider::class, ThemeServiceProvider::class];
+
+        array_walk($dependencies, function($dependency) {
+            app()->register($dependency);
+        });
     }
 
 }

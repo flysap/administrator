@@ -2,7 +2,7 @@
 
 namespace Flysap\Application;
 
-use Flysap\ModuleManager\ModulesCaching;
+use Flysap\ModuleManager\CacheManager;
 use Flysap\Support\Traits\ElementAttributes;
 use Flysap\Support\Traits\ElementsGroup;
 use Flysap\Support\Traits\ElementsTrait;
@@ -13,7 +13,7 @@ class MenuManager {
 
     use ElementsTrait, ElementAttributes, ElementsGroup;
 
-    private $modulesCaching;
+    protected $cacheManager;
 
     protected $modules = [];
 
@@ -22,11 +22,11 @@ class MenuManager {
     protected $isBuild = false;
 
     /**
-     * @param ModulesCaching $modulesCaching
+     * @param CacheManager $cacheManager
      */
-    public function __construct(ModulesCaching $modulesCaching) {
+    public function __construct(CacheManager $cacheManager) {
 
-        $this->modulesCaching = $modulesCaching;
+        $this->cacheManager = $cacheManager;
     }
 
 
@@ -98,8 +98,8 @@ class MenuManager {
             $this->addNamespace($defaultPaths);
 
             $this->addModules(
-                $this->modulesCaching
-                    ->toArray()
+                $this->cacheManager
+                    ->findModules()
             );
 
             $this->setMenu(array_merge(
@@ -171,7 +171,7 @@ class MenuManager {
         $modules   = [];
 
         array_walk($menuPaths, function($path) use(& $modules) {
-            $modules = array_merge($modules, $this->modulesCaching->findModulesConfig(
+            $modules = array_merge($modules, $this->cacheManager->findModules(
                 app_path('../' . $path)
             ));
         });

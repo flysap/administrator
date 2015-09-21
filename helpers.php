@@ -26,7 +26,6 @@ function get_menu_sections() {
  * Render section .
  *
  * @param $section
- * @param $manager
  * @param array $attributes
  * @return
  */

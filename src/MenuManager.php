@@ -95,7 +95,7 @@ class MenuManager {
         if(! $this->isBuild) {
             $defaultPaths = config('administrator.module_namespaces');
 
-            $this->addNamespace($defaultPaths);
+            $this->addNamespace($defaultPaths, false);
 
             $this->addModules(
                 $this->cacheManager
@@ -104,7 +104,7 @@ class MenuManager {
 
             $this->setMenu(array_merge(
                 $this->getModules(),
-                $this->findModules()
+                $this->getModuleNamespaces()
             ));
 
             $this->isBuild = true;
@@ -166,15 +166,12 @@ class MenuManager {
      *
      * @return array
      */
-    public function findModules() {
-        $menuPaths = $this->getNamespaces();
+    public function getModuleNamespaces() {
+        $paths     = $this->getNamespaces();
         $modules   = [];
 
-        array_walk($menuPaths, function($path) use(& $modules) {
-            $modules = array_merge($modules, $this->cacheManager->findModules(
-                app_path('../' . $path)
-            ));
-        });
+        foreach($paths as $path)
+            $modules[] = $this->cacheManager->findModules($path);
 
         return $modules;
     }
@@ -183,21 +180,23 @@ class MenuManager {
     /**
      * Add module namespace .
      *
-     * @param $namespace
+     * @param $namespaces
+     * @param bool $fullPath
      * @return $this
      */
-    public function addNamespace($namespace) {
-        if(! is_array($namespace))
-            $namespace = (array)$namespace;
+    public function addNamespace($namespaces, $fullPath = false) {
+        if(! is_array($namespaces))
+            $namespaces = (array)$namespaces;
 
-        array_walk($namespace, function($namespace) {
-            if( ! Support\is_path_exists(
-                app_path('../' . $namespace)
-            ))
+
+        foreach($namespaces as $namespace) {
+            $path = (! $fullPath) ? app_path('../' . $namespace) : $namespace;
+
+            if( ! Support\is_path_exists($path))
                 return false;
 
             $this->namespaces[] = $namespace;
-        });
+        }
 
         return $this;
     }

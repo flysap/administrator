@@ -196,7 +196,7 @@ class MenuManager {
             if( ! Support\is_path_exists($path))
                 return false;
 
-            $this->namespaces[] = $namespace;
+            $this->namespaces[] = $path;
         }
 
         return $this;

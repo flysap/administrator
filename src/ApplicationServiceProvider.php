@@ -15,6 +15,10 @@ class ApplicationServiceProvider extends ServiceProvider {
             ->loadConfiguration()
             ->loadViews();
 
+        $this->publishes([
+            __DIR__.'/../configuration' => config_path('yaml/application'),
+        ]);
+
         /** On bootstrap set active theme . */
         app('admin-theme-manager')
             ->setDefaultTheme(
@@ -66,6 +70,10 @@ class ApplicationServiceProvider extends ServiceProvider {
     protected function loadConfiguration() {
         Support\set_config_from_yaml(
             __DIR__ . '/../configuration/general.yaml' , 'administrator'
+        );
+
+        Support\merge_yaml_config_from(
+            config_path('yaml/application/general.yaml') , 'administrator'
         );
 
         return $this;

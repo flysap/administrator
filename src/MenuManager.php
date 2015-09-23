@@ -95,17 +95,19 @@ class MenuManager {
         if(! $this->isBuild) {
             $defaultPaths = config('administrator.module_namespaces');
 
-            $this->addNamespace($defaultPaths, false);
+            if($defaultPaths)
+                $this->addNamespace($defaultPaths, false);
 
             $this->addModules(
-                $this->cacheManager
-                    ->findModules()
+                $this->cacheManager->findModules()
             );
 
-            $this->setMenu(array_merge(
-                $this->getModules(),
-                $this->getModuleNamespaces()
-            ));
+            $modulesNamespaces = $this->getModuleNamespaces();
+            foreach ($modulesNamespaces as $module) {
+                $this->addModules($module);
+            }
+
+            $this->setMenu($this->getModules());
 
             $this->isBuild = true;
         }
@@ -187,7 +189,6 @@ class MenuManager {
     public function addNamespace($namespaces, $fullPath = false) {
         if(! is_array($namespaces))
             $namespaces = (array)$namespaces;
-
 
         foreach($namespaces as $namespace) {
             $path = (! $fullPath) ? app_path('../' . $namespace) : $namespace;

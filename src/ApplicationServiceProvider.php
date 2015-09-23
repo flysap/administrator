@@ -3,6 +3,7 @@
 namespace Flysap\Application;
 
 use Flysap\ModuleManager\ModuleServiceProvider;
+use Flysap\Scaffold\ScaffoldServiceProvider;
 use Flysap\ThemeManager\ThemeServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Flysap\Support;
@@ -100,7 +101,7 @@ class ApplicationServiceProvider extends ServiceProvider {
      *
      */
     protected function registerDependencies() {
-        $dependencies = [ModuleServiceProvider::class, ThemeServiceProvider::class];
+        $dependencies = [ModuleServiceProvider::class, ThemeServiceProvider::class, ScaffoldServiceProvider::class];
 
         array_walk($dependencies, function($dependency) {
             app()->register($dependency);

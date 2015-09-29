@@ -5,14 +5,15 @@ namespace Flysap\Application;
 use Flysap\ModuleManager\ModuleServiceProvider;
 use Flysap\Scaffold\ScaffoldServiceProvider;
 use Flysap\ThemeManager\ThemeServiceProvider;
+use Illuminate\Auth\Guard;
 use Illuminate\Support\ServiceProvider;
 use Flysap\Support;
+use Auth;
 
 class ApplicationServiceProvider extends ServiceProvider {
 
     public function boot() {
         $this->loadRoutes()
-            ->loadConfiguration()
             ->loadViews();
 
         $this->publishes([
@@ -24,6 +25,21 @@ class ApplicationServiceProvider extends ServiceProvider {
             ->setDefaultTheme(
                 $this
             );
+
+        /**
+         * Register new file auth driver to serve for initial authentication without using
+         *  database driver ..
+         *
+         */
+        Auth::extend('file', function($app) {
+            $users = config('administrator.auth');
+
+            return new Guard(
+                new FileUserProvider($users, $app['hash'], $app['cache']),
+                $app['session.store']
+            );
+        });
+
     }
 
     /**
@@ -32,7 +48,8 @@ class ApplicationServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        $this->registerDependencies();
+        $this->registerDependencies()
+            ->loadConfiguration();
 
         /** Register administrator theme manager .. */
         $this->app->singleton('admin-theme-manager', function($app) {
@@ -42,6 +59,7 @@ class ApplicationServiceProvider extends ServiceProvider {
         });
 
         /** Register administrator menu .. */
+        #@todo create for future new package which will take care about menu ..
         $this->app->singleton('menu-manager', function($app) {
             return new MenuManager(
                 $app['module-cache-manager']
@@ -114,6 +132,8 @@ class ApplicationServiceProvider extends ServiceProvider {
         array_walk($dependencies, function($dependency) {
             app()->register($dependency);
         });
+
+        return $this;
     }
 
 }

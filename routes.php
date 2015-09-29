@@ -9,5 +9,14 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Flysap\Application\Controller
 });
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Flysap\Application\Controllers', 'middleware' => 'role:admin'], function() {
-    Route::get('/', ['uses' => 'AdminController@main']);
+
+    Route::get('/', ['as' => 'home', 'uses' => 'AdminController@main']);
+
+
+    /**
+     * That controller will show all settings from file config files which are registered to global
+     *  config repository and merge with database config as database priority .. All the changes will be stored in database .
+     *
+     */
+    Route::get('settings', ['as' => 'settings', 'uses' => 'SettingsController@index']);
 });

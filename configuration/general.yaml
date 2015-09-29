@@ -8,13 +8,15 @@ module_namespaces:
 auth:
   admin:
     id: 1
+    name: admin
     username: admin
-    password: hashed_passowrd
-    email:  admin@example.com
+    email: admin@example.com
     role: admin
+    password: hashed_passowrd
   editor:
     id: 2
     username: editor
-    password: hashed_passowrd
+    name: editor
     email:  editor@example.com
     role: editor
+    password: hashed_passowrd

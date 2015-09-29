@@ -4,6 +4,7 @@ namespace Flysap\Application\Controllers;
 
 use App\Http\Controllers\Controller;
 use Flysap\TableManager;
+use Flysap\FormBuilder;
 
 class SettingsController extends Controller {
 
@@ -49,19 +50,18 @@ class SettingsController extends Controller {
             $section = is_array($value) ? $key : 'default';
 
             if( isset($array[$section])) {
-                $array[$section]['value'] = json_encode(array_merge([$key => $value], json_decode($array[$section]['value'], true)));
+                $array[$section]['values'] = json_encode(array_merge([$key => $value], json_decode($array[$section]['values'], true)));
             } else {
                 $attributes = is_array($value) ? $value : [$key => $value];
                 $array[$section] = [
                     'section'   => $section,
-                    'value' => json_encode($attributes),
+                    'values' => json_encode($attributes),
                 ];
             }
-
         });
 
         $table = TableManager\table([
-            'columns' => ['section', 'value'],
+            'columns' => ['section', 'values'],
             'rows' => $array
         ], 'collection', ['class' => 'table table-hover']);
 
@@ -86,16 +86,58 @@ DOC;
         ]);
     }
 
-
+    /**
+     * @param $section
+     * @return \Illuminate\View\View
+     */
     public function edit($section) {
+        $settings = $this->getRepository()->all($section != 'default' ? $section : null);
 
+        $form = FormBuilder\create_form([
+            'action' => route('update_setting', ['section' => $section]),
+            'method' => FormBuilder\Form::METHOD_POST
+        ]);
+
+        array_walk($settings, function($value, $key) use(& $form) {
+            if(is_array($value))
+                return false;
+
+            $form->addElements([
+                $key => FormBuilder\element_text($key, ['value' => $value, 'name' => $key])
+            ]);
+        });
+
+        return view('scaffold::scaffold.edit', compact('form'));
     }
 
+    /**
+     * Update settings .
+     *
+     * @param $section
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update($section) {
+        foreach(request()->all() as $key => $value) {
+            $this->getRepository()->update(
+                $key, $value, $section != 'default' ? $section : null
+            );
+        }
 
+        return back();
     }
 
+    /**
+     * Delete all sections settings .
+     *
+     * @param $section
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete($section) {
+        $settings = $this->getRepository()->all($section != 'default' ? $section : null);
 
+        foreach ($settings as $key => $value)
+            $this->getRepository()->delete($key, $section != 'default' ? $section : null);
+
+        return back();
     }
 }

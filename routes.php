@@ -19,4 +19,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Flysap\Application\Controller
      *
      */
     Route::get('settings', ['as' => 'settings', 'uses' => 'SettingsController@index']);
+    Route::get('settings/{section}', ['as' => 'edit_setting','uses' => 'SettingsController@edit']);
+    Route::post('settings/{section}', ['uses' => 'SettingsController@update']);
+    Route::get('settings/delete/{section}', ['as' => 'delete_setting', 'uses' => 'SettingsController@delete']);
 });

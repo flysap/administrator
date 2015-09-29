@@ -45,25 +45,30 @@ class SettingsController extends Controller {
         $settings = $this->getRepository()->all();
 
         $array = [];
-        $count = 0;
+        array_walk($settings, function($value, $key) use(& $array) {
+            $section = is_array($value) ? $key : 'default';
 
-        array_walk($settings, function($value, $key) use(& $array, & $count) {
-            $array[$count]['section'] = is_array($value) ? $key : null;
-            $array[$count]['value']   = is_array($value) ? json_encode($value) : $value;
-            $array[$count]['key']   = $key;
+            if( isset($array[$section])) {
+                $array[$section]['value'] = json_encode(array_merge([$key => $value], json_decode($array[$section]['value'], true)));
+            } else {
+                $attributes = is_array($value) ? $value : [$key => $value];
+                $array[$section] = [
+                    'section'   => $section,
+                    'value' => json_encode($attributes),
+                ];
+            }
 
-            $count++;
         });
 
         $table = TableManager\table([
-            'columns' => ['key', 'value', 'section'],
+            'columns' => ['section', 'value'],
             'rows' => $array
         ], 'collection', ['class' => 'table table-hover']);
 
 
         $table->addColumn(['closure' => function($value, $attributes) {
             $elements = $attributes['elements'];
-            $section  = isset($elements['section']) && !is_null($elements['section']) ? $elements['section'] : $elements['key'];
+            $section  = $elements['section'];
 
             $edit_route = route('edit_setting', ['section' => $section]);
             $delete_route = route('delete_setting', ['section' => $section]);

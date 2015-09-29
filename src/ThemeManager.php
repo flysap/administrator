@@ -51,14 +51,14 @@ class ThemeManager {
     public function setTheme($theme, ServiceProvider $serviceProvider) {
         $fullPath =  app_path('../' . $this->themeManager->getStoragePath() . DIRECTORY_SEPARATOR . $theme);
 
-        if( ! \Flysap\Support\is_path_exists(
+        if( ! Support\is_path_exists(
             $fullPath
         ) )
             throw new ApplicationException(
                 _('Invalid theme')
             );
 
-        if( ! \Flysap\Support\is_folder_empty(
+        if( ! Support\is_folder_empty(
             $fullPath
         ))
             throw new ApplicationException(

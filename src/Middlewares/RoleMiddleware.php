@@ -15,9 +15,13 @@ class RoleMiddleware {
      * @return mixed
      */
     public function handle($request, Closure $next, $role) {
-        if (! $request->user()->hasRole($role)) {
-            // Redirect...
-        }
+        $user = $request->user();
+
+        if(! $user)
+            return redirect()->back();
+
+        if ( $user->role != $role)
+            return redirect()->back();
 
         return $next($request);
     }

@@ -72,4 +72,3 @@ function current_username() {
         return isset($user->name) ? $user->name : $user->email;
 }
 
-

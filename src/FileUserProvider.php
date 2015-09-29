@@ -142,7 +142,7 @@ class FileUserProvider implements UserProvider {
      */
     protected function getGenericUser($user) {
         if ($user !== null) {
-            return new GenericUser((array)$user);
+            return new GenericUser((array)$user + ['remember_token' => '']);
         }
     }
 

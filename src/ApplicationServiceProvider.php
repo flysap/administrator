@@ -40,6 +40,7 @@ class ApplicationServiceProvider extends ServiceProvider {
             );
         });
 
+        $this->registerBladeExtensions();
     }
 
     /**
@@ -134,6 +135,13 @@ class ApplicationServiceProvider extends ServiceProvider {
         });
 
         return $this;
+    }
+
+    /**
+     * Register blade extensions
+     */
+    protected function registerBladeExtensions() {
+        #@todo ..
     }
 
 }

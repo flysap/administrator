@@ -69,7 +69,7 @@ function current_username() {
     $user = current_user();
 
     if( isset($user->id) )
-        return $user->name;
+        return isset($user->name) ? $user->name : $user->email;
 }
 
 

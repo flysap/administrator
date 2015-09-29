@@ -16,6 +16,10 @@
       },
       {
         "type": "git",
+        "url" : "git@github.com:flysap/table-manager.git"
+      },
+      {
+        "type": "git",
         "url" : "git@github.com:flysap/scaffold.git"
       },
       {
@@ -32,8 +36,10 @@
         "flysap/scaffold": "dev-master",
         "flysap/module-manager": "dev-master",
         "flysap/theme-manager": "dev-master",
+        "flysap/table-manager": "dev-master",
         "flysap/users": "dev-master",
-        "flysap/support": "dev-master"
+        "flysap/support": "dev-master",
+        "parfumix/laravel-settings": "dev-master"
     },
     "autoload": {
         "psr-4": {

@@ -2,7 +2,7 @@
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Flysap\Application\Controllers'], function() {
 
-    Route::get('login', 'AuthController@getLogin');
+    Route::get('login', ['as' => 'login', 'uses' => 'AuthController@getLogin']);
     Route::post('login', 'AuthController@postLogin');
     Route::get('logout', 'AuthController@getLogout');
 

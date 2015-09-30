@@ -10,6 +10,7 @@ auth:
     id: 1
     name: admin
     username: admin
+    roles: [admin]
     email: admin@example.com
     role: admin
     password: hashed_passowrd
@@ -17,6 +18,7 @@ auth:
     id: 2
     username: editor
     name: editor
+    roles: [editor]
     email:  editor@example.com
     role: editor
     password: hashed_passowrd

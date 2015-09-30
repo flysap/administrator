@@ -2,7 +2,6 @@
 
 namespace Flysap\Application;
 
-use Illuminate\Auth\GenericUser;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;

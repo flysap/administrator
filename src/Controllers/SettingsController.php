@@ -101,12 +101,13 @@ DOC;
         ]);
 
         $settings = $this->getRepository()->all($section);
+        $settings = ($section == 'general') ? $settings['general'] : $settings;
 
-        array_walk($default, function($value, $key) use(& $form, $settings, $section) {
+        array_walk($default, function($value, $key) use(& $form, $settings) {
 
             $attributes = [
                 'name' => $value['key'],
-                'value' => isset($settings[$section][$value['key']]) ? $settings[$section][$value['key']] : $value['value']
+                'value' => isset($settings[$value['key']]) ? $settings[$value['key']] : $value['value']
             ];
 
             $form->addElement($key, FormBuilder\get_element(isset($value['type']) ? $value['type'] : 'text', $attributes + $value), true);

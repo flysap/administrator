@@ -4,17 +4,17 @@ namespace Flysap\Application\Middlewares;
 
 use Closure;
 
-class RoleMiddleware {
+class PermissionsMiddleware {
 
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
-     * @param $role
+     * @param $permissions
      * @return mixed
      */
-    public function handle($request, Closure $next, $role) {
+    public function handle($request, Closure $next, $permissions) {
         $user = $request->user();
 
         if(! $user)
@@ -22,7 +22,9 @@ class RoleMiddleware {
                 route('login')
             );
 
-        if ( ! $user->is([$role]))
+        $permissions = !is_array($permissions) ? [$permissions] : $permissions;
+
+        if ( ! $user->can([$permissions]))
             return redirect(
                 route('login')
             );

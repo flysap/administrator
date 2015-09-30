@@ -43,21 +43,24 @@ class SettingsController extends Controller {
      * @return \Illuminate\View\View
      */
     public function index() {
-        $settings = $this->getRepository()->all();
+        $default  = config('administrator.settings');
 
         $array = [];
-        array_walk($settings, function($value, $key) use(& $array) {
-            $section = is_array($value) ? $key : 'default';
+        array_walk($default, function($value, $section) use(& $array) {
 
-            if( isset($array[$section])) {
-                $array[$section]['values'] = json_encode(array_merge([$key => $value], json_decode($array[$section]['values'], true)));
-            } else {
-                $attributes = is_array($value) ? $value : [$key => $value];
-                $array[$section] = [
-                    'section'   => $section,
-                    'values' => json_encode($attributes),
-                ];
-            }
+            $json = [];
+            foreach ($value as $k => $v)
+                $json[$v['key']] = $v['value'];
+
+            $settings = $this->getRepository()->all($section);
+            $values   = ($section == 'general') ? (isset($settings['general']) ? $settings['general'] : []) : $settings;
+
+            $array[] = [
+                'section' => $section,
+                'values'  => json_encode(
+                    array_merge($json, $values)
+                )
+            ];
         });
 
         $table = TableManager\table([
@@ -75,9 +78,8 @@ class SettingsController extends Controller {
 
             return <<<DOC
 <a href="$edit_route">Edit</a><br />
-<a href="$delete_route">Delete</a><br />
+<a href="$delete_route">Reset</a><br />
 DOC;
-            ;
         }], 'action');
 
         return view('themes::pages.table', [
@@ -91,20 +93,23 @@ DOC;
      * @return \Illuminate\View\View
      */
     public function edit($section) {
-        $settings = $this->getRepository()->all($section != 'default' ? $section : null);
+        $default = config('administrator.settings')[$section];
 
         $form = FormBuilder\create_form([
             'action' => route('update_setting', ['section' => $section]),
             'method' => FormBuilder\Form::METHOD_POST
         ]);
 
-        array_walk($settings, function($value, $key) use(& $form) {
-            if(is_array($value))
-                return false;
+        $settings = $this->getRepository()->all($section);
 
-            $form->addElements([
-                $key => FormBuilder\element_text($key, ['value' => $value, 'name' => $key])
-            ]);
+        array_walk($default, function($value, $key) use(& $form, $settings, $section) {
+
+            $attributes = [
+                'name' => $value['key'],
+                'value' => isset($settings[$section][$value['key']]) ? $settings[$section][$value['key']] : $value['value']
+            ];
+
+            $form->addElement($key, FormBuilder\get_element(isset($value['type']) ? $value['type'] : 'text', $attributes + $value), true);
         });
 
         return view('scaffold::scaffold.edit', compact('form'));
@@ -118,8 +123,9 @@ DOC;
      */
     public function update($section) {
         foreach(request()->all() as $key => $value) {
-            $this->getRepository()->update(
-                $key, $value, $section != 'default' ? $section : null
+            $this->getRepository()
+                ->update(
+                $key, $value, $section
             );
         }
 
@@ -133,10 +139,8 @@ DOC;
      * @return \Illuminate\Http\RedirectResponse
      */
     public function delete($section) {
-        $settings = $this->getRepository()->all($section != 'default' ? $section : null);
-
-        foreach ($settings as $key => $value)
-            $this->getRepository()->delete($key, $section != 'default' ? $section : null);
+      $this->getRepository()
+          ->clear($section);
 
         return back();
     }

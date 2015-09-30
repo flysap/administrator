@@ -101,7 +101,7 @@ DOC;
         ]);
 
         $settings = $this->getRepository()->all($section);
-        $settings = ($section == 'general') ? $settings['general'] : $settings;
+        $settings = ($section == 'general') ? (isset($settings['general']) ? $settings['general'] : []) : $settings;
 
         array_walk($default, function($value, $key) use(& $form, $settings) {
 
@@ -110,7 +110,12 @@ DOC;
                 'value' => isset($settings[$value['key']]) ? $settings[$value['key']] : $value['value']
             ];
 
-            $form->addElement($key, FormBuilder\get_element(isset($value['type']) ? $value['type'] : 'text', $attributes + $value), true);
+            $type = isset($value['type']) ? $value['type'] : 'text';
+
+            if( $type == 'checkbox' )
+                $form->addElement($key.'1', FormBuilder\element_hidden('', ['value' => 0, 'group' => $value['group']] + $attributes), true);
+
+            $form->addElement($key, FormBuilder\get_element($type, $attributes + $value), true);
         });
 
         return view('scaffold::scaffold.edit', compact('form'));

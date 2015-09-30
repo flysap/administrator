@@ -33,6 +33,10 @@
       {
         "type": "git",
         "url" : "git@github.com:flysap/form-builder.git"
+      },
+      {
+        "type": "git",
+        "url" : "git@github.com:flysap/settings.git"
       }
     ],
     "require": {
@@ -44,7 +48,7 @@
         "flysap/users": "dev-master",
         "flysap/support": "dev-master",
         "flysap/form-builder": "dev-master",
-        "parfumix/laravel-settings": "dev-master"
+        "flysap/settings": "dev-master"
     },
     "autoload": {
         "psr-4": {

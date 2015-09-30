@@ -4,13 +4,13 @@ namespace Flysap\Application;
 
 use Flysap\ModuleManager\ModuleServiceProvider;
 use Flysap\Scaffold\ScaffoldServiceProvider;
+use Flysap\Settings\SettingsServiceProvider;
 use Flysap\TableManager\TableServiceProvider;
 use Flysap\ThemeManager\ThemeServiceProvider;
 use Illuminate\Auth\Guard;
 use Illuminate\Support\ServiceProvider;
 use Flysap\Support;
 use Auth;
-use Laravel\Settings\SettingsServiceProvider;
 
 class ApplicationServiceProvider extends ServiceProvider {
 
@@ -134,8 +134,8 @@ class ApplicationServiceProvider extends ServiceProvider {
             ModuleServiceProvider::class,
             ThemeServiceProvider::class,
             ScaffoldServiceProvider::class,
-            SettingsServiceProvider::class,
             TableServiceProvider::class,
+            SettingsServiceProvider::class,
         ];
 
         array_walk($dependencies, function($dependency) {

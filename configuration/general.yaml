@@ -4,7 +4,7 @@ default_theme: flysap/admin-lte
 # additional menu module folder, the path is relative to application path ..
 module_namespaces:
 
-# there will be setup initial users .
+# here will be setup initial users .
 auth:
   admin:
     id: 1

@@ -5,7 +5,7 @@ namespace Flysap\Application\Controllers;
 use App\Http\Controllers\Controller;
 use Flysap\Support\Traits\ElementPermissions;
 use Parfumix\TableManager;
-use Flysap\FormBuilder;
+use Parfumix\FormBuilder;
 
 class SettingsController extends Controller {
 

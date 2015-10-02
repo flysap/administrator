@@ -32,7 +32,7 @@
       },
       {
         "type": "git",
-        "url" : "git@github.com:flysap/form-builder.git"
+        "url" : "git@github.com:parfumix/form-builder.git"
       },
       {
         "type": "git",
@@ -47,7 +47,7 @@
         "parfumix/table-manager": "dev-master",
         "flysap/users": "dev-master",
         "flysap/support": "dev-master",
-        "flysap/form-builder": "dev-master",
+        "parfumix/form-builder": "dev-master",
         "parfumix/laravel-settings": "dev-master"
     },
     "autoload": {

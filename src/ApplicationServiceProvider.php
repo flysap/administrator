@@ -2,9 +2,10 @@
 
 namespace Flysap\Application;
 
+use Flysap\ImageManager\ImageManagerServiceProvider;
 use Flysap\ModuleManager\ModuleServiceProvider;
 use Flysap\Scaffold\ScaffoldServiceProvider;
-use Flysap\Settings\SettingsServiceProvider;
+use Laravel\Settings\SettingsServiceProvider;
 use Flysap\TableManager\TableServiceProvider;
 use Flysap\ThemeManager\ThemeServiceProvider;
 use Illuminate\Auth\Guard;
@@ -15,8 +16,7 @@ use Auth;
 class ApplicationServiceProvider extends ServiceProvider {
 
     public function boot() {
-        $this->loadRoutes()
-            ->loadViews();
+        $this->loadRoutes();
 
         $this->publishes([
             __DIR__.'/../configuration' => config_path('yaml/application'),
@@ -97,20 +97,13 @@ class ApplicationServiceProvider extends ServiceProvider {
             config_path('yaml/application/general.yaml') , 'administrator'
         );
 
-        return $this;
-    }
+        Support\set_config_from_yaml(
+            __DIR__ . '/../configuration/settings.yaml' , 'administrator-settings'
+        );
 
-    /**
-     * Load views .
-     *
-     * @return $this
-     */
-    protected function loadViews() {
-        $this->loadViewsFrom(__DIR__ . '/../views', 'administrator');
-
-        $this->publishes([
-            __DIR__ . '/../views' => base_path('resources/views/vendor/administrator'),
-        ]);
+        Support\merge_yaml_config_from(
+            config_path('yaml/application/settings.yaml') , 'administrator-settings'
+        );
 
         return $this;
     }
@@ -135,7 +128,8 @@ class ApplicationServiceProvider extends ServiceProvider {
             ThemeServiceProvider::class,
             ScaffoldServiceProvider::class,
             TableServiceProvider::class,
-            SettingsServiceProvider::class,
+            ImageManagerServiceProvider::class,
+            SettingsServiceProvider ::class,
         ];
 
         array_walk($dependencies, function($dependency) {

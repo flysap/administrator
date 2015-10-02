@@ -36,7 +36,7 @@
       },
       {
         "type": "git",
-        "url" : "git@github.com:flysap/settings.git"
+        "url" : "git@github.com:parfumix/laravel-settings.git"
       }
     ],
     "require": {
@@ -48,7 +48,7 @@
         "flysap/users": "dev-master",
         "flysap/support": "dev-master",
         "flysap/form-builder": "dev-master",
-        "flysap/settings": "dev-master"
+        "parfumix/laravel-settings": "dev-master"
     },
     "autoload": {
         "psr-4": {

@@ -1,0 +1,38 @@
+# here will be setup initial fields for settings .
+default:
+  general:
+    items:
+      - &DEFAULT
+        label: Admin name
+        key: admin_namme
+        type: text
+
+      - <<: *DEFAULT
+        label: Admin email
+        key: admin_email
+        type: email
+
+      - <<: *DEFAULT
+        label: Site title
+        key: site_title
+
+      - <<: *DEFAULT
+        label: Site description
+        key: site_description
+        type: textarea
+
+      - <<: *DEFAULT
+        label: Site down
+        group: settings
+        roles: [admin]
+        key: site_down
+        type: checkbox
+
+      - label: Site roles
+        group: settings
+        key: site_roles
+        type: select
+        options:
+          a: admin
+          b: editor
+          c: guest

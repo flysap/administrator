@@ -7,6 +7,8 @@ use Flysap\ThemeManager\ThemeManager as ModuleThemeManager;
 use Illuminate\Support\ServiceProvider;
 use Flysap\Support;
 
+#@todo that class need to be moved to theme manager .. each installed theme have to be copied in specific folder
+
 class ThemeManager {
 
     const DEFAULT_THEME_FILE = 'default_theme.json';

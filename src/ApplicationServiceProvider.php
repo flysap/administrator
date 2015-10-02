@@ -2,11 +2,11 @@
 
 namespace Flysap\Application;
 
-use Flysap\ImageManager\ImageManagerServiceProvider;
+use Flysap\ImageManager\ImageServiceProvider;
 use Flysap\ModuleManager\ModuleServiceProvider;
 use Flysap\Scaffold\ScaffoldServiceProvider;
 use Laravel\Settings\SettingsServiceProvider;
-use Flysap\TableManager\TableServiceProvider;
+use Parfumix\TableManager\TableServiceProvider;
 use Flysap\ThemeManager\ThemeServiceProvider;
 use Illuminate\Auth\Guard;
 use Illuminate\Support\ServiceProvider;
@@ -128,7 +128,7 @@ class ApplicationServiceProvider extends ServiceProvider {
             ThemeServiceProvider::class,
             ScaffoldServiceProvider::class,
             TableServiceProvider::class,
-            ImageManagerServiceProvider::class,
+            ImageServiceProvider::class,
             SettingsServiceProvider ::class,
         ];
 

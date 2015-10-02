@@ -16,7 +16,7 @@
       },
       {
         "type": "git",
-        "url" : "git@github.com:flysap/table-manager.git"
+        "url" : "git@github.com:parfumix/table-manager.git"
       },
       {
         "type": "git",
@@ -44,7 +44,7 @@
         "flysap/scaffold": "dev-master",
         "flysap/module-manager": "dev-master",
         "flysap/theme-manager": "dev-master",
-        "flysap/table-manager": "dev-master",
+        "parfumix/table-manager": "dev-master",
         "flysap/users": "dev-master",
         "flysap/support": "dev-master",
         "flysap/form-builder": "dev-master",

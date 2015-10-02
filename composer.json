@@ -20,6 +20,10 @@
       },
       {
         "type": "git",
+        "url" : "git@github.com:flysap/media-manager.git"
+      },
+      {
+        "type": "git",
         "url" : "git@github.com:flysap/scaffold.git"
       },
       {
@@ -44,6 +48,7 @@
         "flysap/scaffold": "dev-master",
         "flysap/module-manager": "dev-master",
         "flysap/theme-manager": "dev-master",
+        "flysap/media-manager": "dev-master",
         "parfumix/table-manager": "dev-master",
         "flysap/users": "dev-master",
         "flysap/support": "dev-master",

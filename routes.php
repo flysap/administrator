@@ -28,5 +28,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Flysap\Application\Controller
      *  all eloquent fillAble variables plus custom .
      *
      */
-    Route::resource('mail', 'MailController');
+    Route::get('mails', ['as' => 'admin.mail.index', 'uses' => 'MailController@index']);
+    Route::any('mail/{id}', ['as' => 'admin.mail.edit', 'uses' => 'MailController@edit']);
+    Route::get('mails/{delete}', ['as' => 'admin.mail.delete', 'uses' => 'MailController@delete']);
 });

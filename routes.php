@@ -21,4 +21,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Flysap\Application\Controller
     Route::get('settings/{section}', ['as' => 'edit_setting','uses' => 'SettingsController@edit']);
     Route::post('settings/{section}', ['as' => 'update_setting', 'uses' => 'SettingsController@update']);
     Route::get('settings/delete/{section}', ['as' => 'delete_setting', 'uses' => 'SettingsController@delete']);
+
+
+    /**
+     * That controller will help us to manage mail templates. Each of template support multilingual and accept by default
+     *  all eloquent fillAble variables plus custom .
+     *
+     */
+    Route::resource('mail', 'MailController');
 });

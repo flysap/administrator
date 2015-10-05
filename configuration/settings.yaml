@@ -19,7 +19,7 @@ default:
       - <<: *DEFAULT
         label: Site description
         key: site_description
-        type: textarea
+        type: wysiwyg
 
       - <<: *DEFAULT
         label: Site down

@@ -26,11 +26,12 @@ class MailTemplate extends Model implements Translatable, ScaffoldAble, Sluggabl
 
     public $translatedAttributes = [
         'title' => 'text',
-        'description' => 'textarea',
+        'description' => 'wysiwyg',
     ];
 
     protected $sluggable = [
         'unique' => true,
+        'separator' => '-',
         'on_update' => true,
         'build_from' => 'slug',
         'save_to'    => 'slug',

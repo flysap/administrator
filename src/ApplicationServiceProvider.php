@@ -20,6 +20,7 @@ class ApplicationServiceProvider extends ServiceProvider {
 
         $this->publishes([
             __DIR__.'/../configuration' => config_path('yaml/application'),
+            __DIR__.'/../migrations' => database_path('migrations'),
         ]);
 
         /** On bootstrap set active theme . */

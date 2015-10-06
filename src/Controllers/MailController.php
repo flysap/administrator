@@ -38,8 +38,54 @@ DOC;
 
         return view('themes::pages.table', [
             'title' => trans('Mail Templates'),
+            'addRoute' => route('admin.mail.create'),
             'table' => $table
         ]);
+    }
+
+    /**
+     * Create new mail template .
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws FormBuilder\ElementException
+     */
+    public function create() {
+        if(! $_POST) {
+            $form = FormBuilder\create_form([
+                'action' => route('admin.mail.create'),
+                'method' => FormBuilder\Form::METHOD_POST
+            ]);
+
+            $elements[] = FormBuilder\element_text('slug', [
+                'name'  => 'slug',
+                'group' => 'default'
+            ]);
+
+            if( $this->repository instanceof Translatable ) {
+                $locales = Locale\get_locales();
+
+                foreach($locales as $locale => $attributes) {
+                    foreach($this->repository->translatedAttributes() as $attribute => $type) {
+                        $elements[]  = FormBuilder\get_element($type, [
+                            'group' => 'translations',
+                            'label' => ucfirst($attribute) . ' ' . $locale,
+                            'name'  => $locale . '['.$attribute.']',
+                        ]);
+                    }
+                }
+            }
+
+            $form->addElements($elements, true);
+
+            return view('scaffold::scaffold.edit', compact('form'));
+        }
+
+        $mailRow = $this->repository
+            ->create($_POST);
+
+        return redirect(
+            route('admin.mail.edit', ['id' => $mailRow->id])
+        );
     }
 
     /**
@@ -61,7 +107,7 @@ DOC;
             $elements[] = FormBuilder\element_text('slug', [
                 'name'  => 'slug',
                 'group' => 'default',
-                'value' => $mailRow->slug
+                'value' => isset($mailRow->slug) ? $mailRow->slug : ''
             ]);
 
             if( $mailRow instanceof Translatable ) {
@@ -74,7 +120,7 @@ DOC;
                         $elements[]  = FormBuilder\get_element($type, [
                             'group' => 'translations',
                             'label' => ucfirst($attribute) . ' ' . $locale,
-                            'value' => $translation[$attribute],
+                            'value' => isset($translation[$attribute]) ? $translation[$attribute] : '',
                             'name'  => $locale . '['.$attribute.']',
                         ]);
                     }

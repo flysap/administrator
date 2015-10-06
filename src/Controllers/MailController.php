@@ -26,9 +26,9 @@ class MailController extends Controller {
     public function index() {
         $table = TableManager\table($this->repository, 'eloquent', ['class' => 'table table-hover']);
 
-        $table->addColumn(['closure' => function() {
-            $edit_route = route('admin.mail.edit', ['mail' => 1]);
-            $delete_route = route('admin.mail.delete', ['mail' => 1]);
+        $table->addColumn(['closure' => function($value, $element) {
+            $edit_route = route('admin.mail.edit', ['mail' => $element['elements']['id']]);
+            $delete_route = route('admin.mail.delete', ['mail' => $element['elements']['id']]);
 
             return <<<DOC
 <a href="$edit_route">Edit</a><br />

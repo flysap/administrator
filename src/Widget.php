@@ -39,7 +39,16 @@ abstract class Widget {
         if( $this->hasLabel() )
             $result .= '<label>' . $this->getLabel();
 
-        $result .= $this->getAttribute('value');
+        /** @var Magic expression :D $value */
+        $value = (method_exists($this, 'value')) ? $this->value() : (isset($this->value) ? $this->value : ($this->hasAttribute('value')) ? $this->getAttribute('value') : '');
+
+        if( $this->hasAttribute('template') || isset($this->template) ) {
+            $template = $this->hasAttribute('template') ? $this->getAttribute('template') : $this->template;
+
+            $result .= view($template, ['value' => $value]);
+        } else {
+            $result .= $value;
+        }
 
         if( $this->hasLabel() )
             $result .= '</label>';

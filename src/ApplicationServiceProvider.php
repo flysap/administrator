@@ -2,6 +2,7 @@
 
 namespace Flysap\Application;
 
+use Flysap\Application\Widgets\UsersWidget;
 use Flysap\Media\MediaServiceProvider;
 use Flysap\ModuleManager\ModuleServiceProvider;
 use Flysap\Scaffold\ScaffoldServiceProvider;
@@ -68,6 +69,16 @@ class ApplicationServiceProvider extends ServiceProvider {
             return new MenuManager(
                 $app['module-cache-manager']
             );
+        });
+
+        /**
+         * Register widget manager .
+         *
+         */
+        $this->app->singleton('widget-manager', function() {
+            return new WidgetManager([
+                new UsersWidget()
+            ]);
         });
     }
 

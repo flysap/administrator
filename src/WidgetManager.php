@@ -2,6 +2,8 @@
 
 namespace Flysap\Application;
 
+use Flysap\Application\Exceptions\WidgetException;
+
 class WidgetManager {
 
     /**
@@ -13,6 +15,28 @@ class WidgetManager {
         $this->addWidgets($widgets);
     }
 
+    /**
+     * Register class widget .
+     *
+     * @param $class
+     * @return $this
+     * @throws WidgetException
+     */
+    public function subscribe($class) {
+        if( class_exists($class) ) {
+            $instance = (new $class);
+
+            if( $instance instanceof WidgetAble )
+                $this->addWidget($class, (new $class));
+            else
+                throw new WidgetException('Invalid class');
+
+            return $this;
+        }
+
+        throw new WidgetException('Invalid class');
+    }
+
 
     /**
      * Add widgets .
@@ -21,8 +45,8 @@ class WidgetManager {
      * @return $this
      */
     public function addWidgets(array $widgets) {
-        array_walk($widgets, function($widget) {
-            $this->addWidget($widget);
+        array_walk($widgets, function ($widget, $alias) {
+            $this->addWidget($alias, $widget);
         });
 
         return $this;
@@ -31,11 +55,12 @@ class WidgetManager {
     /**
      * Add widget .
      *
+     * @param $alias
      * @param WidgetAble $widget
      * @return $this
      */
-    public function addWidget(WidgetAble $widget) {
-        $this->widgets[get_class($widget)] = $widget;
+    public function addWidget($alias, $widget) {
+        $this->widgets[$alias] = $widget;
 
         return $this;
     }
@@ -44,12 +69,12 @@ class WidgetManager {
     /**
      * Remove widgets by key .
      *
-     * @param $class
+     * @param $alias
      * @return $this
      */
-    public function removeWidget($class) {
-        if( isset($this->widgets[$class]) )
-            unset($this->widgets[$class]);
+    public function removeWidget($alias) {
+        if (isset($this->widgets[$alias]))
+            unset($this->widgets[$alias]);
 
         return $this;
     }
@@ -67,12 +92,12 @@ class WidgetManager {
     /**
      * Get widget by key .
      *
-     * @param $class
+     * @param $alias
      * @return mixed
      */
-    public function getWidget($class) {
-        if( isset($this->widgets[$class]) )
-            return $this->widgets[$class];
+    public function getWidget($alias) {
+        if (isset($this->widgets[$alias]))
+            return $this->widgets[$alias];
     }
 
 
@@ -85,10 +110,12 @@ class WidgetManager {
         $widgets = $this->getWidgets();
 
         $html = '';
-        array_walk($widgets, function($widget) use(& $html) {
-            if( $widget instanceof Widget ) {
-                if( $widget->isAllowed() )
+        array_walk($widgets, function ($widget) use (& $html) {
+            if ($widget instanceof Widget) {
+                if ($widget->isAllowed())
                     $html .= $widget->render();
+            } elseif ($widget instanceof \Closure) {
+                $html .= $widget();
             } else {
                 $html .= $widget->render();
             }

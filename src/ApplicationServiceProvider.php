@@ -159,7 +159,7 @@ class ApplicationServiceProvider extends ServiceProvider {
      */
     protected function registerWidgets() {
         $widgets = [
-            'users' => UsersWidget::class
+            #@todo add some widgets ..
         ];
 
         array_walk($widgets, function($widget, $alias) {

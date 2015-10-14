@@ -44,7 +44,8 @@ class ApplicationServiceProvider extends ServiceProvider {
             );
         });
 
-        $this->registerBladeExtensions();
+        $this->registerBladeExtensions()
+            ->registerWidgets();
     }
 
     /**
@@ -71,15 +72,8 @@ class ApplicationServiceProvider extends ServiceProvider {
             );
         });
 
-        /**
-         * Register widget manager .
-         *
-         */
-        $this->app->singleton('widget-manager', function() {
-            return new WidgetManager([
-                new UsersWidget()
-            ]);
-        });
+        /** Register widget manager . */
+        $this->app->singleton('widget-manager', WidgetManager::class);
     }
 
     /**
@@ -156,6 +150,22 @@ class ApplicationServiceProvider extends ServiceProvider {
      */
     protected function registerBladeExtensions() {
         #@todo ..
+
+        return $this;
+    }
+
+    /**
+     *  Register widgets .
+     */
+    protected function registerWidgets() {
+        $widgets = [UsersWidget::class];
+
+        array_walk($widgets, function($widget) {
+            app('widget-manager')
+                ->addWidget('users', (new $widget));
+        });
+
+        return $this;
     }
 
 }

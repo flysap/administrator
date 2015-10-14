@@ -158,11 +158,13 @@ class ApplicationServiceProvider extends ServiceProvider {
      *  Register widgets .
      */
     protected function registerWidgets() {
-        $widgets = [UsersWidget::class];
+        $widgets = [
+            'users' => UsersWidget::class
+        ];
 
-        array_walk($widgets, function($widget) {
+        array_walk($widgets, function($widget, $alias) {
             app('widget-manager')
-                ->addWidget('users', (new $widget));
+                ->addWidget($alias, $widget);
         });
 
         return $this;

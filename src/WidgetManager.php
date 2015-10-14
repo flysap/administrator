@@ -111,13 +111,16 @@ class WidgetManager {
 
         $html = '';
         array_walk($widgets, function ($widget) use (& $html) {
-            if ($widget instanceof Widget) {
-                if ($widget->isAllowed())
-                    $html .= $widget->render();
-            } elseif ($widget instanceof \Closure) {
+            if( $widget instanceof \Closure ) {
                 $html .= $widget();
             } else {
-                $html .= $widget->render();
+                $instance = (new $widget);
+                if ($instance instanceof Widget) {
+                    if ($instance->isAllowed())
+                        $html .= $instance->render();
+                } else {
+                    $html .= $instance->render();
+                }
             }
         });
 

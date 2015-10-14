@@ -104,13 +104,18 @@ class WidgetManager {
     /**
      * Render widgets .
      *
+     * @param array $only
      * @return string
+     * @internal param array $widgets
      */
-    public function render() {
+    public function render(array $only = array()) {
         $widgets = $this->getWidgets();
 
         $html = '';
-        array_walk($widgets, function ($widget) use (& $html) {
+        array_walk($widgets, function ($widget, $alias) use (& $html, $only) {
+            if( !empty($only) && !in_array($alias, $only))
+                return false;
+
             if( $widget instanceof \Closure ) {
                 $html .= $widget();
             } else {

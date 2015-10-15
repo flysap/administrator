@@ -24,12 +24,6 @@ class ApplicationServiceProvider extends ServiceProvider {
             __DIR__.'/../migrations' => database_path('migrations'),
         ]);
 
-        /** On bootstrap set active theme . */
-        app('admin-theme-manager')
-            ->setDefaultTheme(
-                $this
-            );
-
         /**
          * Register new file auth driver to serve for initial authentication without using
          *  database driver ..
@@ -56,13 +50,6 @@ class ApplicationServiceProvider extends ServiceProvider {
     public function register() {
         $this->registerDependencies()
             ->loadConfiguration();
-
-        /** Register administrator theme manager .. */
-        $this->app->singleton('admin-theme-manager', function($app) {
-            return new ThemeManager(
-                $app['theme-manager']
-            );
-        });
 
         /** Register administrator menu .. */
         #@todo create for future new package which will take care about menu ..

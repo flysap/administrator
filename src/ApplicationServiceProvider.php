@@ -2,10 +2,10 @@
 
 namespace Flysap\Application;
 
-use Flysap\Application\Widgets\UsersWidget;
 use Flysap\Media\MediaServiceProvider;
 use Flysap\ModuleManager\ModuleServiceProvider;
 use Flysap\Scaffold\ScaffoldServiceProvider;
+use Illuminate\Foundation\AliasLoader;
 use Laravel\Settings\SettingsServiceProvider;
 use Parfumix\TableManager\TableServiceProvider;
 use Flysap\ThemeManager\ThemeServiceProvider;
@@ -61,6 +61,10 @@ class ApplicationServiceProvider extends ServiceProvider {
 
         /** Register widget manager . */
         $this->app->singleton('widget-manager', WidgetManager::class);
+
+        /** @var Register alias facade . $loader */
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Widget', WidgetFacade::class);
     }
 
     /**

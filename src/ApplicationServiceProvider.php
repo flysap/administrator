@@ -106,16 +106,6 @@ class ApplicationServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Call protected parent function .
-     *
-     * @param string $path
-     * @param string $namespace
-     */
-    public function loadViewsFrom($path, $namespace) {
-        return parent::loadViewsFrom($path, $namespace);
-    }
-
-    /**
      * Register service provider dependencies .
      *
      */
